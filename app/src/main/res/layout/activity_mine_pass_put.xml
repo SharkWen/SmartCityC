@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MinePassPutActivity">
+
+    <include layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp">
+
+        <TextView
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="旧密码" />
+        <EditText
+            android:id="@+id/old_pass"
+            android:hint="请输入旧密码"
+            android:textSize="13sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="新密码" />
+        <EditText
+            android:id="@+id/new_pass"
+            android:hint="请输入新密码"
+            android:textSize="13sp"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="确认新密码" />
+        <EditText
+            android:id="@+id/new_sure_pass"
+            android:hint="请确认新密码"
+            android:textSize="13sp"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/mine_pass_sure"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:background="@drawable/btn_public"
+            android:layout_marginTop="150dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="150dp"
+            android:layout_height="30dp"/>
+    </LinearLayout>
+
+</LinearLayout>
