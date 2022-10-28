@@ -3,35 +3,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/activityBackground"
     android:layout_height="match_parent"
+    android:background="@color/activityBackground"
     android:orientation="vertical"
     tools:context=".OutFoodSureOrder">
 
     <include layout="@layout/title_bar" />
 
     <LinearLayout
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/info_bg"
         android:gravity="center_vertical"
-        android:layout_marginHorizontal="20dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <TextView
-            android:layout_marginLeft="15dp"
+            android:id="@+id/sure_order_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
             android:hint="请选择收货地址"
-            android:textStyle="bold"
             android:textColor="@color/black"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
         <TextView
-            android:layout_marginLeft="230dp"
-            android:background="@drawable/put"
+            android:id="@+id/sure_order_select"
             android:layout_width="25dp"
-            android:layout_height="25dp"/>
+            android:layout_height="25dp"
+            android:background="@drawable/put" />
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/order_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/order_sure"
+        android:text="提交订单"
+        android:background="@color/yellow"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
 
 </LinearLayout>

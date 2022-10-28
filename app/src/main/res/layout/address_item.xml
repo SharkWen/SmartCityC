@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="20dp"
+    android:background="@color/activityBackground"
+    android:padding="10dp"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
+<LinearLayout
+    android:id="@+id/address_item_layout"
+    android:orientation="vertical"
+    android:background="@drawable/info_bg"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/address_item_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="sidofisdf" />
+
+    <TextView
+        android:id="@+id/address_item_relationship"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="sidofisdf" />
+
+    <TextView
+        android:id="@+id/address_item_relationshipTel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="sidofisdf" />
+</LinearLayout>
+
+</LinearLayout>

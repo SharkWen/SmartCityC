@@ -44,9 +44,9 @@ public class ShopDetailsAdapter extends RecyclerView.Adapter<ShopDetailsAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         update();
         int count = 0;
-        if(data.getFoodData().get(list.get(position).getId()) == null){
+        if (data.getFoodData().get(list.get(position).getId()) == null) {
             count = 0;
-        }else{
+        } else {
             count = data.getFoodData().get(list.get(position).getId()).getCount();
         }
         holder.outFoodTotals.setText(count + "");
@@ -58,13 +58,13 @@ public class ShopDetailsAdapter extends RecyclerView.Adapter<ShopDetailsAdapter.
         holder.outFoodPlug.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(data.getFoodData().get(list.get(position).getId()) == null){
-                    if(!data.keyList.contains(list.get(position).getId())){
+                if (data.getFoodData().get(list.get(position).getId()) == null) {
+                    if (!data.keyList.contains(list.get(position).getId())) {
                         data.keyList.add(list.get(position).getId());
                     }
-                    data.getFoodData().put(list.get(position).getId(), new DataStore.Food(0, list.get(position).getPrice()));
+                    data.getFoodData().put(list.get(position).getId(), new DataStore.Food(0, list.get(position).getPrice(), Config.baseUrl + list.get(position).getImgUrl(), list.get(position).getName()));
                 }
-                data.getFoodData().get(list.get(position).getId()).setCount(data.getFoodData().get(list.get(position).getId()).getCount()+1);
+                data.getFoodData().get(list.get(position).getId()).setCount(data.getFoodData().get(list.get(position).getId()).getCount() + 1);
                 holder.outFoodTotals.setText(data.getFoodData().get(list.get(position).getId()).getCount() + "");
                 update();
             }
@@ -72,30 +72,30 @@ public class ShopDetailsAdapter extends RecyclerView.Adapter<ShopDetailsAdapter.
         holder.outFoodReduce.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(data.getFoodData().get(list.get(position).getId()) == null){
-                    data.getFoodData().put(list.get(position).getId(), new DataStore.Food(0, list.get(position).getPrice()));
+                if (data.getFoodData().get(list.get(position).getId()) == null) {
+                    if (!data.keyList.contains(list.get(position).getId())) {
+                        data.keyList.add(list.get(position).getId());
+                    }
+                    data.getFoodData().put(list.get(position).getId(), new DataStore.Food(0, list.get(position).getPrice(), Config.baseUrl + list.get(position).getImgUrl(), list.get(position).getName()));
                 }
-                if(data.getFoodData().get(list.get(position).getId()).getCount() == 0){
-                    return;
-                }else{
-                    data.getFoodData().get(list.get(position).getId()).setCount(data.getFoodData().get(list.get(position).getId()).getCount()-1);
+                if (data.getFoodData().get(list.get(position).getId()).getCount() != 0) {
+                    data.getFoodData().get(list.get(position).getId()).setCount(data.getFoodData().get(list.get(position).getId()).getCount() - 1);
                 }
-                holder.outFoodTotals.setText(data.getFoodData().get(list.get(position).getId()).getCount()+"");
+                holder.outFoodTotals.setText(data.getFoodData().get(list.get(position).getId()).getCount() + "");
                 update();
             }
         });
     }
 
-    private void update(){
-        int allCount = 0;
-        int allPrice = 0;
-        for(Integer id: data.keyList){
-            allCount+=data.getFoodData().get(id).getCount();
-            allPrice+=data.getFoodData().get(id).getPrice()*data.getFoodData().get(id).getCount();
-            TextView totalNum, totalPrices;
+    private void update() {
+        float allCount = 0;
+        float allPrice = 0;
+        for (Integer id : data.keyList) {
+            allCount += data.getFoodData().get(id).getCount();
+            allPrice += data.getFoodData().get(id).getPrice() * data.getFoodData().get(id).getCount();
         }
-        totalNum.setText(allCount+"");
-        totalPrices.setText(allPrice+"");
+        totalNum.setText(allCount + "");
+        totalPrices.setText(allPrice + "");
     }
 
     @Override

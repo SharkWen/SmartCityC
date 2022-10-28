@@ -16,6 +16,24 @@ public class DataStore {
     public static class Food{
         int count;
         Double price;
+        String url;
+        String name;
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
 
         public int getCount() {
             return count;
@@ -33,9 +51,11 @@ public class DataStore {
             this.price = price;
         }
 
-        public Food(int count, Double price) {
+        public Food(int count, Double price,String url,String name) {
             this.count = count;
             this.price = price;
+            this.url = url;
+            this.name = name;
         }
     }
 }

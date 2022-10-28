@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -60,20 +61,31 @@ public class ShopDetailsActivity extends AppCompatActivity {
     ListView shopDetailsLeft;
     RecyclerView shop_details_right;
     boolean isSelected = false;
-    public static String image, nameD, timeD, distance, score, sellerId;
+    public static String image, nameD, timeD, distance, score, sellerId = "";
     Context context = this;
-    DataStore data = new DataStore();
+    DataStore data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_details);
+        data = new DataStore();
         bindView();
         initData();
         initEvent();
     }
 
     private void initEvent() {
+        shopDetailsSure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, OutFoodSureOrder.class);
+                intent.putExtra("data", new Gson().toJson(data));
+                intent.putExtra("amount",shopDetailsTotalPrice.getText().toString());
+                intent.putExtra("sellerId",sellerId);
+                startActivity(intent);
+            }
+        });
         shopDetailsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

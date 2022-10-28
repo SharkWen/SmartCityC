@@ -5,6 +5,15 @@ public class MsgBean {
     private String msg;
     private Integer code;
     private String token;
+    private String orderNo;
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
 
     public String getMsg() {
         return msg;

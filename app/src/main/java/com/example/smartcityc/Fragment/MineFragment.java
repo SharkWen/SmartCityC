@@ -107,6 +107,8 @@ public class MineFragment extends Fragment {
                                     @Override
                                     public void run() {
                                         if (mineInfoBean.getUser() == null) return;
+                                        Tool.shp(context).edit().putString("avaterurl",mineInfoBean.getUser().getAvatar()).commit();
+                                        Tool.shp(context).edit().putString("nick",mineInfoBean.getUser().getNickName()).commit();
                                         Glide.with(context).load(mineInfoBean.getUser().getAvatar())
                                                 .apply(new RequestOptions().transform(new RoundedCorners(100)))
                                                 .into(mineFragImage);
