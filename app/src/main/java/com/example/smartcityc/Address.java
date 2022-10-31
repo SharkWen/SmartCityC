@@ -134,6 +134,10 @@ public class Address extends AppCompatActivity {
         tvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!Tool.shp(context).contains("token")){
+                    Tool.setDialog(context,"请注册登录").show();
+                    return;
+                }
                 dialog1.show();
             }
         });

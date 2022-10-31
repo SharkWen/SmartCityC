@@ -1,66 +1,67 @@
 package com.example.smartcityc.OrderFragment;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.smartcityc.Adapter.ShopOrderListAdapter;
+import com.example.smartcityc.Bean.OrderListBean;
 import com.example.smartcityc.R;
+import com.example.smartcityc.Tool.Tool;
+import com.google.gson.Gson;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RefundFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
 public class RefundFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public RefundFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RefundFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RefundFragment newInstance(String param1, String param2) {
-        RefundFragment fragment = new RefundFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
+    View view;
+    Context context;
+    private RecyclerView orderFragAllRv;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_refund, container, false);
+        view = inflater.inflate(R.layout.fragment_refund, container, false);
+        context = getContext();
+        bindView();
+        initData();
+        return view;
+    }
+    private void initData() {
+        Tool.getTokenData("/prod-api/api/takeout/order/list?status=退款&pageNum=1&pageSize=8", Tool.sp(context, "token"), new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                OrderListBean orderListBean = new Gson().fromJson(response.body().string(),OrderListBean.class);
+                Tool.handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ShopOrderListAdapter shopOrderListAdapter  = new ShopOrderListAdapter(context,orderListBean.getRows());
+                        orderFragAllRv.setAdapter(shopOrderListAdapter);
+                        orderFragAllRv.setLayoutManager(new LinearLayoutManager(context));
+                    }
+                });
+            }
+        });
+    }
+
+    private void bindView() {
+        orderFragAllRv = view.findViewById(R.id.order_frag_all_rv);
     }
 }

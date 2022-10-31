@@ -57,6 +57,8 @@ public class BannerOutFoodAdapter extends BannerImageAdapter<OutFoodBannerBean.R
                             ShopDetailsActivity.nameD = list.get(i).getAdvTitle();
                             ShopDetailsActivity.timeD = "30";
                             ShopDetailsActivity.distance = "800";
+                            ShopDetailsActivity.mouthSells = "2888";
+                            ShopDetailsActivity.score = "4.5";
                             context.startActivity(new Intent(context,ShopDetailsActivity.class));
                         }
                     });

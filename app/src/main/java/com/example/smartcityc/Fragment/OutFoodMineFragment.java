@@ -18,6 +18,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.smartcityc.Address;
 import com.example.smartcityc.R;
+import com.example.smartcityc.TakeOutFoodActivity;
 import com.example.smartcityc.Tool.Tool;
 
 public class OutFoodMineFragment extends Fragment {
@@ -46,6 +47,22 @@ public class OutFoodMineFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(context, Address.class));
+            }
+        });
+        outFoodFoodMine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent  = new Intent(context, TakeOutFoodActivity.class);
+                intent.putExtra("back","order");
+                context.startActivity(intent);
+            }
+        });
+        outFoodMineCollection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent  = new Intent(context, TakeOutFoodActivity.class);
+                intent.putExtra("back","follow");
+                context.startActivity(intent);
             }
         });
     }

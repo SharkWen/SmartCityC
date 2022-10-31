@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartcityc.Bean.AddressBean;
 import com.example.smartcityc.Bean.OrderSureBean;
 import com.example.smartcityc.R;
+import com.example.smartcityc.Tool.Tool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.MyViewHo
                         t.setTextColor(Color.BLACK);
                     }
                 }
+
                 textView.setText(
                         "收货地址:" + list.get(position).getAddressDetail() + list.get(position).getLabel() + "\n" +
                                 "联系人:" + list.get(position).getName() + "\n" +
@@ -70,6 +73,10 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
+        if(list == null){
+            Toast.makeText(context,"你还没有收货地址哦!",Toast.LENGTH_SHORT).show();
+            return 0;
+        }
         return list.size();
     }
 

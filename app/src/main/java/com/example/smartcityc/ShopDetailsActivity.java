@@ -25,11 +25,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.smartcityc.Adapter.ShopDetailsAdapter;
+import com.example.smartcityc.Adapter.ShopPjAdapter;
+import com.example.smartcityc.Bean.ShopDetailBean;
 import com.example.smartcityc.Bean.ShopDetailsLeft;
+import com.example.smartcityc.Bean.ShopPjBean;
 import com.example.smartcityc.Bean.ShopRightBean;
 import com.example.smartcityc.Tool.Config;
 import com.example.smartcityc.Tool.Tool;
 import com.example.smartcityc.data.DataStore;
+import com.example.smartcityc.data.ShopStore;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -58,13 +62,21 @@ public class ShopDetailsActivity extends AppCompatActivity {
     private TextView shopDetailsTotalNum;
     private TextView shopDetailsTotalPrice;
     private Button shopDetailsSure;
+    private LinearLayout shopDetailsDcBtn;
+    private LinearLayout shopDetailsPjBtn;
+    private LinearLayout shopDetailsJcBtn;
+    private RecyclerView shopDetailsRv;
+    private TextView shopDetailsIntroduction;
+
+
+
     ListView shopDetailsLeft;
     RecyclerView shop_details_right;
     boolean isSelected = false;
-    public static String image, nameD, timeD, distance, score, sellerId = "";
+    public static String image, nameD, timeD, distance, score, sellerId, mouthSells = "";
     Context context = this;
     DataStore data;
-
+    ShopStore shopStore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,24 +88,48 @@ public class ShopDetailsActivity extends AppCompatActivity {
     }
 
     private void initEvent() {
+
         shopDetailsSure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, OutFoodSureOrder.class);
                 intent.putExtra("data", new Gson().toJson(data));
-                intent.putExtra("amount",shopDetailsTotalPrice.getText().toString());
-                intent.putExtra("sellerId",sellerId);
+                intent.putExtra("amount", shopDetailsTotalPrice.getText().toString());
+                intent.putExtra("sellerId", sellerId);
                 startActivity(intent);
             }
         });
+
+        if(!Tool.shp(context).contains("collection")){
+            shopStore = new ShopStore();
+        }else {
+            shopStore = new Gson().fromJson(Tool.sp(context,"collection"),ShopStore.class);
+        }
+        if (shopStore.getSellerIds().contains(sellerId)) {
+            isSelected = true;
+            shopDetailsRatingBar.setRating(RatingBar.ACCESSIBILITY_LIVE_REGION_POLITE);
+        }
+        ShopStore.ShopDetails shopDetails = new ShopStore.ShopDetails();
         shopDetailsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isSelected) {
                     shopDetailsRatingBar.setRating(0);
                     isSelected = false;
+                    shopStore.getMap().remove(Integer.parseInt(sellerId));
+                    shopStore.getSellerIds().remove(sellerId);
+                    System.out.println(new Gson().toJson(shopStore));
+                    Tool.shp(context).edit().putString("collection",new Gson().toJson(shopStore)).commit();
                 } else {
                     shopDetailsRatingBar.setRating(RatingBar.ACCESSIBILITY_LIVE_REGION_POLITE);
+                    shopStore.getSellerIds().add(sellerId);
+                    shopDetails.setName(nameD);
+                    shopDetails.setScore(score);
+                    shopDetails.setUrl(image);
+                    shopDetails.setMouthSells(mouthSells);
+                    shopStore.getMap().put(Integer.parseInt(sellerId), shopDetails);
+                    System.out.println(new Gson().toJson(shopStore));
+                    Tool.shp(context).edit().putString("collection",new Gson().toJson(shopStore)).commit();
                     isSelected = true;
                 }
 
@@ -103,23 +139,31 @@ public class ShopDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 initBtn(shopDetailsDc);
+                initLayoutVisibility(shopDetailsDcBtn);
             }
         });
         shopDetailsJc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 initBtn(shopDetailsJc);
+                initLayoutVisibility(shopDetailsJcBtn);
             }
         });
         shopDetailsPj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 initBtn(shopDetailsPj);
+                initLayoutVisibility(shopDetailsPjBtn);
             }
         });
         Left();
     }
-
+    private void initLayoutVisibility(LinearLayout ll){
+        shopDetailsDcBtn.setVisibility(View.GONE);
+        shopDetailsJcBtn.setVisibility(View.GONE);
+        shopDetailsPjBtn.setVisibility(View.GONE);
+        ll.setVisibility(View.VISIBLE);
+    }
     private void right(String sellerId, String cateGoryId) {
         Tool.getData("/prod-api/api/takeout/product/list?categoryId=" + cateGoryId + "&sellerId=" + sellerId, new Callback() {
             @Override
@@ -196,6 +240,12 @@ public class ShopDetailsActivity extends AppCompatActivity {
         tvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!isSelected){
+                    Intent intent = new Intent(context,TakeOutFoodActivity.class);
+                    intent.putExtra("back","follow");
+                    startActivity(intent);
+                    return;
+                }
                 finish();
             }
         });
@@ -205,6 +255,46 @@ public class ShopDetailsActivity extends AppCompatActivity {
         shopDetailsContent.setText("到店所需时间" + timeD + "分钟,距离" + distance + "米");
         shopDetailsScore.setText(score);
         llBg.setBackgroundResource(R.color.yellow);
+        Tool.getData("/prod-api/api/takeout/seller/" + sellerId, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                ShopDetailBean shopDetailBean = new Gson().fromJson(response.body().string(),ShopDetailBean.class);
+                Tool.handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        shopDetailsIntroduction.setText(shopDetailBean.getData().getIntroduction());
+                        Glide.with(context).load(Config.baseUrl + shopDetailBean.getData().getImgUrl()).apply(new RequestOptions().transform(new CenterCrop())).into(shopDetailsImage);
+                        shopDetailsContent.setText("到店所需时间" + shopDetailBean.getData().getAvgCost() + "分钟,距离" + shopDetailBean.getData().getDistance() + "米");
+                        shopDetailsScore.setText(shopDetailBean.getData().getScore()+"");
+                        shopDetailsName.setText(shopDetailBean.getData().getName());
+                    }
+                });
+            }
+        });
+        Tool.getData("/prod-api/api/takeout/comment/list?sellerId=" + sellerId, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                ShopPjBean shopPjBean = new Gson().fromJson(response.body().string(),ShopPjBean.class);
+                Tool.handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ShopPjAdapter shopPjAdapter = new ShopPjAdapter(context,shopPjBean.getRows());
+                        shopDetailsRv.setAdapter(shopPjAdapter);
+                        shopDetailsRv.setLayoutManager(new LinearLayoutManager(context));
+                    }
+                });
+            }
+        });
     }
 
     private void bindView() {
@@ -225,5 +315,11 @@ public class ShopDetailsActivity extends AppCompatActivity {
         shopDetailsTotalNum = (TextView) findViewById(R.id.shop_details_totalNum);
         shopDetailsTotalPrice = (TextView) findViewById(R.id.shop_details_totalPrice);
         shopDetailsSure = (Button) findViewById(R.id.shop_details_sure);
+        shopDetailsDcBtn = (LinearLayout) findViewById(R.id.shop_details_dcBtn);
+        shopDetailsPjBtn = (LinearLayout) findViewById(R.id.shop_details_pjBtn);
+        shopDetailsJcBtn = (LinearLayout) findViewById(R.id.shop_details_jcBtn);
+        shopDetailsRv = (RecyclerView) findViewById(R.id.shop_details_rv);
+        shopDetailsIntroduction = (TextView) findViewById(R.id.shop_details_introduction);
+
     }
 }

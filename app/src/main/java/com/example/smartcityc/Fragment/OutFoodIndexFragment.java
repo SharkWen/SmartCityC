@@ -118,6 +118,19 @@ public class OutFoodIndexFragment extends Fragment {
                             }
                         });
                         gridView1.setAdapter(simpleAdapter);
+                        gridView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                ShopDetailsActivity.image = Config.baseUrl + outFoodTjBean.getRows().get(i).getImgUrl();
+                                ShopDetailsActivity.nameD = outFoodTjBean.getRows().get(i).getName();
+                                ShopDetailsActivity.timeD = outFoodTjBean.getRows().get(i).getDeliveryTime() + "";
+                                ShopDetailsActivity.distance = outFoodTjBean.getRows().get(i).getDistance() + "";
+                                ShopDetailsActivity.score = outFoodTjBean.getRows().get(i).getScore() + "";
+                                ShopDetailsActivity.sellerId = outFoodTjBean.getRows().get(i).getId() + "";
+                                ShopDetailsActivity.mouthSells = outFoodTjBean.getRows().get(i).getSaleQuantity() + "";
+                                startActivity(new Intent(context,ShopDetailsActivity.class));
+                            }
+                        });
                     }
                 });
             }
@@ -244,6 +257,7 @@ public class OutFoodIndexFragment extends Fragment {
                                 ShopDetailsActivity.distance = outFoodTjBean.getRows().get(i).getDistance() + "";
                                 ShopDetailsActivity.score = outFoodTjBean.getRows().get(i).getScore() + "";
                                 ShopDetailsActivity.sellerId = outFoodTjBean.getRows().get(i).getId() + "";
+                                ShopDetailsActivity.mouthSells = outFoodTjBean.getRows().get(i).getSaleQuantity() + "";
                                 startActivity(new Intent(context, ShopDetailsActivity.class));
                             }
                         });

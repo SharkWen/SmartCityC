@@ -114,6 +114,7 @@ public class OutFoodShopDetailActivity extends AppCompatActivity {
                                 ShopDetailsActivity.timeD = outFoodTjBean.getRows().get(i).getDeliveryTime() + "";
                                 ShopDetailsActivity.distance = outFoodTjBean.getRows().get(i).getDistance() + "";
                                 ShopDetailsActivity.score = outFoodTjBean.getRows().get(i).getScore() + "";
+                                ShopDetailsActivity.mouthSells = outFoodTjBean.getRows().get(i).getSaleQuantity() + "";
                                 ShopDetailsActivity.sellerId = outFoodTjBean.getRows().get(i).getId() + "";
                                 startActivity(new Intent(context, ShopDetailsActivity.class));
                             }

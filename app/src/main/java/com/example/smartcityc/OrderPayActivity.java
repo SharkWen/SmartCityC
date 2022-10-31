@@ -81,15 +81,17 @@ public class OrderPayActivity extends AppCompatActivity {
                         "\"orderNo\": \"" + getIntent().getStringExtra("orderNo") + "\",\n" +
                         "\"paymentType\":\"" + payType + "\"\n" +
                         "}";
+                System.out.println(data);
                 Tool.postTokenData("/prod-api/api/takeout/pay", Tool.sp(OrderPayActivity.this, "token"), data, new Callback() {
                     @Override
                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
-
+                        System.out.println("no================");
                     }
 
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                         MsgBean msgBean = new Gson().fromJson(response.body().string(),MsgBean.class);
+                        System.out.println(msgBean.getCode());
                         if(msgBean.getCode() == 200){
                             Tool.handler.post(new Runnable() {
                                 @Override
@@ -98,6 +100,13 @@ public class OrderPayActivity extends AppCompatActivity {
                                     Tool.handler.postDelayed(()->{
                                         startActivity(new Intent(OrderPayActivity.this,TakeOutFoodActivity.class));
                                     },1000);
+                                }
+                            });
+                        }else {
+                            Tool.handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Tool.setDialog(OrderPayActivity.this,msgBean.getMsg()).show();
                                 }
                             });
                         }

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/shop_pj_image"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginRight="10dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/shop_pj_nick"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <RatingBar
+                    android:id="@+id/shop_pj_rating"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:progressTint="@color/yellow"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginVertical="6dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/shop_pj_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/shop_pj_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="12sp" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

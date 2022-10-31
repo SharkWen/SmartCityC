@@ -28,6 +28,8 @@ public class TakeOutFoodActivity extends AppCompatActivity {
     private Button outFoodOrder;
     private Button outFoodMine;
     List<Button> buttons = new ArrayList<>();
+     String back = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,14 +46,33 @@ public class TakeOutFoodActivity extends AppCompatActivity {
         llBg.setBackgroundResource(R.color.yellow);
         MainActivity.back = "service";
         tvBack.setOnClickListener(view -> {
-            startActivity(new Intent(this, MainActivity.class));
+            if(back.equals("mine")){
+                initButton(outFoodIndex);
+                fragmentTransaction(new OutFoodIndexFragment()).commit();
+                back = "";
+            }else {
+                startActivity(new Intent(this, MainActivity.class));
+            }
         });
         tvTitle.setText("外卖点餐");
-        fragmentTransaction(new OutFoodIndexFragment()).commit();
         buttons.add(outFoodIndex);
+        if (getIntent().getStringExtra("back") != null) {
+            if (getIntent().getStringExtra("back").equals("order")) {
+                initButton(outFoodOrder);
+                fragmentTransaction(new OutFoodOrderFragment()).commit();
+            }else if(getIntent().getStringExtra("back").equals("follow")){
+                initButton(outFoodFollow);
+                fragmentTransaction(new OutFoodFollowFragment()).commit();
+            }else {
+                fragmentTransaction(new OutFoodIndexFragment()).commit();
+            }
+        }else {
+            fragmentTransaction(new OutFoodIndexFragment()).commit();
+        }
         outFoodMine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                back = "mine";
                 initButton(outFoodMine);
                 fragmentTransaction(new OutFoodMineFragment()).commit();
             }
@@ -78,15 +99,17 @@ public class TakeOutFoodActivity extends AppCompatActivity {
             }
         });
     }
-    private void initButton(Button bt){
-        if(!buttons.isEmpty()){
-            for (Button b :buttons){
+
+    private void initButton(Button bt) {
+        if (!buttons.isEmpty()) {
+            for (Button b : buttons) {
                 b.setBackgroundResource(R.color.gray);
             }
         }
         bt.setBackgroundResource(R.color.yellow);
         buttons.add(bt);
     }
+
     private void bindView() {
         llBg = (LinearLayout) findViewById(R.id.ll_bg);
         tvBack = (TextView) findViewById(R.id.tv_back);

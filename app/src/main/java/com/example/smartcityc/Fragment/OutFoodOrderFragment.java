@@ -18,6 +18,7 @@ import com.example.smartcityc.OrderFragment.RefundFragment;
 import com.example.smartcityc.OrderFragment.ToBeEvaluatedFragment;
 import com.example.smartcityc.OrderFragment.ToBePaidFragment;
 import com.example.smartcityc.R;
+import com.example.smartcityc.Tool.Tool;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -44,6 +45,10 @@ public class OutFoodOrderFragment extends Fragment {
     }
 
     private void initData() {
+        if(!Tool.shp(context).contains("token")){
+            Tool.setDialog(context,"请注册登录").show();
+            return;
+        }
         fragmentList.add(new OrderAllFragment());
         fragmentList.add(new ToBePaidFragment());
         fragmentList.add(new ToBeEvaluatedFragment());

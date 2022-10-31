@@ -88,7 +88,7 @@ public class ShopDetailsAdapter extends RecyclerView.Adapter<ShopDetailsAdapter.
     }
 
     private void update() {
-        float allCount = 0;
+        int allCount = 0;
         float allPrice = 0;
         for (Integer id : data.keyList) {
             allCount += data.getFoodData().get(id).getCount();
