@@ -3,9 +3,11 @@ package com.example.smartcityc;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,6 +41,9 @@ public class VideoActivity extends AppCompatActivity {
     private AutoCompleteTextView edSearch;
     private Banner videoBanner;
     private ListView videoListView;
+    private TextView videoMore;
+
+    boolean isSome = true;
     String search = "";
     String[] strings = new String[]{"videoPic", "videoTitle", "videoContent","videoTime", "videoTimeout"};
     int[] ints = new int[]{R.id.video_pic, R.id.video_title,R.id.video_content, R.id.video_time, R.id.video_timeout};
@@ -72,6 +77,14 @@ public class VideoActivity extends AppCompatActivity {
                     return true;
                 }
                 return false;
+            }
+        });
+        videoMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isSome = false;
+                videoMore.setVisibility(View.GONE);
+                getListView();
             }
         });
     }
@@ -122,6 +135,7 @@ public class VideoActivity extends AppCompatActivity {
                         map.put("videoTime", n.getPlayDate());
                         map.put("videoTimeout", "时长"+n.getDuration()+"分钟");
                         mapList.add(map);
+                        if(n.getDuration() == 105 && isSome) break;
                     }
                 }
                 Tool.handler.post(()->{
@@ -138,6 +152,18 @@ public class VideoActivity extends AppCompatActivity {
                         }
                     });
                     videoListView.setAdapter(simpleAdapter);
+                    videoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            VideoDetails.detailsUrl = Config.baseUrl+ videoBean.getRows().get(i).getCover();
+                            VideoDetails.detailsName = videoBean.getRows().get(i).getName();
+                            VideoDetails.detailsScore = "评分:"+ videoBean.getRows().get(i).getScore()+"";
+                            VideoDetails.detailsLike = "喜欢人数:"+videoBean.getRows().get(i).getLikeNum()+"";
+                            VideoDetails.detailsContent = "简介:"+Tool.html(videoBean.getRows().get(i).getIntroduction());
+                            VideoDetails.stars = videoBean.getRows().get(i).getScore();
+                            startActivity(new Intent(VideoActivity.this,VideoDetails.class));
+                        }
+                    });
                 });
             }
         });
@@ -148,5 +174,6 @@ public class VideoActivity extends AppCompatActivity {
         edSearch = (AutoCompleteTextView) findViewById(R.id.ed_search);
         videoBanner = (Banner) findViewById(R.id.video_banner);
         videoListView = (ListView) findViewById(R.id.video_list_view);
+        videoMore = (TextView) findViewById(R.id.video_more);
     }
 }

@@ -25,6 +25,7 @@ import com.example.smartcityc.Bean.ServiceBean;
 import com.example.smartcityc.DataAnalysisActivity;
 import com.example.smartcityc.FindHourseActivity;
 import com.example.smartcityc.MengActivity;
+import com.example.smartcityc.ParkingLotActivity;
 import com.example.smartcityc.R;
 import com.example.smartcityc.TakeOutFoodActivity;
 import com.example.smartcityc.Tool.Config;
@@ -140,6 +141,13 @@ public class ServiceFragment extends Fragment {
                                         break;
                                     case 3:
                                         context.startActivity(new Intent(context, FindHourseActivity.class));
+                                        break;
+                                }
+                            }
+                            if(type.equals("车主服务")){
+                                switch (i){
+                                    case 0:
+                                        context.startActivity(new Intent(context, ParkingLotActivity.class));
                                         break;
                                 }
                             }

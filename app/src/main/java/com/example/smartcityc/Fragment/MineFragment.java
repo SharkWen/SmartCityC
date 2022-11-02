@@ -23,6 +23,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.smartcityc.Bean.MineInfoBean;
 import com.example.smartcityc.Bean.MsgBean;
+import com.example.smartcityc.LoginActivity;
 import com.example.smartcityc.MineInfoActivity;
 import com.example.smartcityc.MinePassPutActivity;
 import com.example.smartcityc.MineYjActivity;
@@ -49,16 +50,9 @@ public class MineFragment extends Fragment {
     private LinearLayout mineFragYj;
     private Button mineFragLogin;
     SharedPreferences sp;
-    boolean isLogin = true;
     MineInfoBean mineInfoBean;
-    public static String nickName,sex,tel;
-    @Override
-    public void onResume() {
-        super.onResume();
-        initData();
-    }
+    public static String nickName, sex, tel;
 
-    String pass;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,13 +68,13 @@ public class MineFragment extends Fragment {
     }
 
     private void initData() {
-        mineFragLogin.setText("退出登录");
-        String data = "{\n" +
-                "    \"username\":\"helloyuyiii\",\n" +
-                "    \"password\":\"" + (Tool.sp(context, "pass").equals("") ? "lll" : sp.getString("pass", "")) + "\"\n" +
-                "}";
-        System.out.println(data);
-        Tool.postData("/prod-api/api/login", data, new Callback() {
+        if (!Tool.shp(context).contains("token")) {
+            mineFragLogin.setText("登录");
+        } else {
+            mineFragLogin.setText("退出登录");
+        }
+        if (!sp.contains("token")) return;
+        Tool.getTokenData("/prod-api/api/common/user/getInfo", sp.getString("token", ""), new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
 
@@ -88,58 +82,41 @@ public class MineFragment extends Fragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                String res = response.body().string();
-                MsgBean msgBean = new Gson().fromJson(res, MsgBean.class);
-                sp.edit().putString("token", msgBean.getToken()).commit();
+                mineInfoBean = new Gson().fromJson(response.body().string(), MineInfoBean.class);
                 Tool.handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Tool.getTokenData("/prod-api/api/common/user/getInfo", sp.getString("token", ""), new Callback() {
-                            @Override
-                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-
-                            }
-
-                            @Override
-                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                                mineInfoBean = new Gson().fromJson(response.body().string(), MineInfoBean.class);
-                                Tool.handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (mineInfoBean.getUser() == null) return;
-                                        Tool.shp(context).edit().putString("avaterurl",mineInfoBean.getUser().getAvatar()).commit();
-                                        Tool.shp(context).edit().putString("nick",mineInfoBean.getUser().getNickName()).commit();
-                                        Glide.with(context).load(mineInfoBean.getUser().getAvatar())
-                                                .apply(new RequestOptions().transform(new RoundedCorners(100)))
-                                                .into(mineFragImage);
-                                        mineFragTitle.setText(mineInfoBean.getUser().getNickName());
-                                        sex = mineInfoBean.getUser().getSex();
-                                        nickName = mineInfoBean.getUser().getNickName();
-                                        tel = mineInfoBean.getUser().getPhonenumber();
-                                    }
-                                });
-                            }
-                        });
+                        if (mineInfoBean.getUser() == null) return;
+                        Tool.shp(context).edit().putString("avaterurl", mineInfoBean.getUser().getAvatar()).commit();
+                        Tool.shp(context).edit().putString("nick", mineInfoBean.getUser().getNickName()).commit();
+                        Glide.with(context).load(mineInfoBean.getUser().getAvatar())
+                                .apply(new RequestOptions().transform(new RoundedCorners(100)))
+                                .into(mineFragImage);
+                        mineFragTitle.setText(mineInfoBean.getUser().getNickName());
+                        sex = mineInfoBean.getUser().getSex();
+                        nickName = mineInfoBean.getUser().getNickName();
+                        tel = mineInfoBean.getUser().getPhonenumber();
                     }
                 });
             }
         });
 
+
     }
 
     private void initEvent() {
         mineFragLogin.setOnClickListener(view1 -> {
-            isLogin = !isLogin;
-            if (isLogin) {
-                initData();
+            if (!Tool.shp(context).contains("token")) {
+                startActivity(new Intent(context, LoginActivity.class));
             } else {
                 mineFragImage.setImageResource(R.drawable.ppheard);
                 mineFragTitle.setText("昵称");
                 mineFragLogin.setText("登录");
+                sp.edit().remove("token").commit();
             }
         });
         mineFragXx.setOnClickListener(view1 -> {
-            if (!isLogin) {
+            if (!sp.contains("token")) {
                 Tool.setDialog(context, "请登录").show();
                 return;
             }
@@ -151,13 +128,17 @@ public class MineFragment extends Fragment {
             startActivity(new Intent(context, MineInfoActivity.class));
         });
         mineFragPass.setOnClickListener(view1 -> {
-            if (!isLogin) {
+            if (!sp.contains("token")) {
                 Tool.setDialog(context, "请登录").show();
                 return;
             }
             context.startActivity(new Intent(context, MinePassPutActivity.class));
         });
         mineFragYj.setOnClickListener(view1 -> {
+            if (!sp.contains("token")) {
+                Tool.setDialog(context, "请登录").show();
+                return;
+            }
             startActivity(new Intent(context, MineYjActivity.class));
         });
     }
