@@ -22,11 +22,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.smartcityc.ActivityActivity;
 import com.example.smartcityc.Bean.ServiceBean;
+import com.example.smartcityc.CarMovingActivity;
 import com.example.smartcityc.DataAnalysisActivity;
 import com.example.smartcityc.FindHourseActivity;
 import com.example.smartcityc.MengActivity;
 import com.example.smartcityc.ParkingLotActivity;
 import com.example.smartcityc.R;
+import com.example.smartcityc.SmartBusActivity;
 import com.example.smartcityc.TakeOutFoodActivity;
 import com.example.smartcityc.Tool.Config;
 import com.example.smartcityc.Tool.Tool;
@@ -86,19 +88,23 @@ public class ServiceFragment extends Fragment {
     private void initData() {
         getServiceData(serveFrgSh.getText().toString());
     }
-    private void initColor(TextView tv){
-        serveFrgSh.setBackgroundColor(Color.rgb(230,230,230));
-        serveFrgCz.setBackgroundColor(Color.rgb(230,230,230));
-        serveFrgPm.setBackgroundColor(Color.rgb(230,230,230));
-        serveFrgSh.setTextColor(Color.rgb(111,109,109));
-        serveFrgCz.setTextColor(Color.rgb(111,109,109));;
-        serveFrgPm.setTextColor(Color.rgb(111,109,109));;
+
+    private void initColor(TextView tv) {
+        serveFrgSh.setBackgroundColor(Color.rgb(230, 230, 230));
+        serveFrgCz.setBackgroundColor(Color.rgb(230, 230, 230));
+        serveFrgPm.setBackgroundColor(Color.rgb(230, 230, 230));
+        serveFrgSh.setTextColor(Color.rgb(111, 109, 109));
+        serveFrgCz.setTextColor(Color.rgb(111, 109, 109));
+        ;
+        serveFrgPm.setTextColor(Color.rgb(111, 109, 109));
+        ;
         tv.setBackgroundColor(Color.WHITE);
-        tv.setTextColor(Color.rgb(3,169,244));
+        tv.setTextColor(Color.rgb(3, 169, 244));
     }
-    private void getServiceData(String type){
+
+    private void getServiceData(String type) {
         List<Map<String, Object>> list = new ArrayList<>();
-        Tool.getData("/prod-api/api/service/list?serviceType="+type, new Callback() {
+        Tool.getData("/prod-api/api/service/list?serviceType=" + type, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
 
@@ -113,6 +119,12 @@ public class ServiceFragment extends Fragment {
                     map.put("text_service", n.getServiceName());
                     list.add(map);
                 }
+                if (type.equals("车主服务")) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("image_service", "堵车移车");
+                    map.put("text_service", "堵车移车");
+                    list.add(map);
+                }
                 Tool.handler.post(() -> {
                     SimpleAdapter simpleAdapter = new SimpleAdapter(context, list, R.layout.home_frag_gl
                             , new String[]{"image_service", "text_service"}, new int[]{R.id.home_frag_iv, R.id.home_frag_tv});
@@ -121,7 +133,11 @@ public class ServiceFragment extends Fragment {
                         public boolean setViewValue(View view, Object o, String s) {
                             ImageView imageView = view.findViewById(R.id.home_frag_iv);
                             if (imageView != null) {
-                                Glide.with(context).load(s).into(imageView);
+                                if (s.equals("堵车移车")) {
+                                    imageView.setImageResource(R.drawable.carmoving);
+                                } else {
+                                    Glide.with(context).load(s).into(imageView);
+                                }
                                 return true;
                             }
                             return false;
@@ -131,8 +147,11 @@ public class ServiceFragment extends Fragment {
                     gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            if(type.equals("便民服务")){
-                                switch (i){
+                            if (type.equals("便民服务")) {
+                                switch (i) {
+                                    case 0:
+                                        context.startActivity(new Intent(context, SmartBusActivity.class));
+                                        break;
                                     case 1:
                                         context.startActivity(new Intent(context, MengActivity.class));
                                         break;
@@ -144,15 +163,18 @@ public class ServiceFragment extends Fragment {
                                         break;
                                 }
                             }
-                            if(type.equals("车主服务")){
-                                switch (i){
+                            if (type.equals("车主服务")) {
+                                switch (i) {
                                     case 0:
                                         context.startActivity(new Intent(context, ParkingLotActivity.class));
                                         break;
+                                    case 2:
+                                        context.startActivity(new Intent(context, CarMovingActivity.class));
+                                        break;
                                 }
                             }
-                            if(type.equals("生活服务")){
-                                switch (i){
+                            if (type.equals("生活服务")) {
+                                switch (i) {
                                     case 2:
                                         context.startActivity(new Intent(context, VideoActivity.class));
                                         break;
@@ -171,6 +193,7 @@ public class ServiceFragment extends Fragment {
             }
         });
     }
+
     private void bindView() {
         serveFrgEd = view.findViewById(R.id.serve_frg_ed);
         serveFrgSure = view.findViewById(R.id.serve_frg_sure);

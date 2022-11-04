@@ -30,6 +30,7 @@ public class OrderAllFragment extends Fragment {
     View view;
     Context context;
     private RecyclerView orderFragAllRv;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,11 +51,15 @@ public class OrderAllFragment extends Fragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                OrderListBean orderListBean = new Gson().fromJson(response.body().string(),OrderListBean.class);
+                OrderListBean orderListBean = new Gson().fromJson(response.body().string(), OrderListBean.class);
                 Tool.handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ShopOrderListAdapter shopOrderListAdapter  = new ShopOrderListAdapter(context,orderListBean.getRows());
+                        if (orderListBean.getCode() == 401) {
+                            Tool.setDialog(context, "登录过期,请重新登录").show();
+                            return;
+                        }
+                        ShopOrderListAdapter shopOrderListAdapter = new ShopOrderListAdapter(context, orderListBean.getRows());
                         orderFragAllRv.setAdapter(shopOrderListAdapter);
                         orderFragAllRv.setLayoutManager(new LinearLayoutManager(context));
                     }

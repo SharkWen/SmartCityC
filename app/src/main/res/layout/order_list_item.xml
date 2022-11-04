@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/info_bg"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,8 +20,8 @@
 
             <ImageView
                 android:id="@+id/shop_order_logoType"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/mine" />
 
             <LinearLayout

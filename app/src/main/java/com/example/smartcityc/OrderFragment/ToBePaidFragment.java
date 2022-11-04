@@ -52,6 +52,10 @@ public class ToBePaidFragment extends Fragment {
                 Tool.handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        if (orderListBean.getCode() == 401) {
+                            Tool.setDialog(context, "登录过期,请重新登录").show();
+                            return;
+                        }
                         ShopOrderListAdapter shopOrderListAdapter  = new ShopOrderListAdapter(context,orderListBean.getRows());
                         orderFragAllRv.setAdapter(shopOrderListAdapter);
                         orderFragAllRv.setLayoutManager(new LinearLayoutManager(context));

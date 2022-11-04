@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -28,6 +29,7 @@ import com.example.smartcityc.MineInfoActivity;
 import com.example.smartcityc.MinePassPutActivity;
 import com.example.smartcityc.MineYjActivity;
 import com.example.smartcityc.R;
+import com.example.smartcityc.SmartBusOrderActivity;
 import com.example.smartcityc.Tool.Tool;
 import com.google.gson.Gson;
 
@@ -86,7 +88,11 @@ public class MineFragment extends Fragment {
                 Tool.handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (mineInfoBean.getUser() == null) return;
+                        if (mineInfoBean.getCode() != 200) {
+                            Tool.setDialog(context, "登录过期,请重新登录").show();
+                            Tool.shp(context).edit().remove("token").commit();
+                            return;
+                        }
                         Tool.shp(context).edit().putString("avaterurl", mineInfoBean.getUser().getAvatar()).commit();
                         Tool.shp(context).edit().putString("nick", mineInfoBean.getUser().getNickName()).commit();
                         Glide.with(context).load(mineInfoBean.getUser().getAvatar())
@@ -140,6 +146,16 @@ public class MineFragment extends Fragment {
                 return;
             }
             startActivity(new Intent(context, MineYjActivity.class));
+        });
+        mineFragDd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!Tool.shp(context).contains("SmartOrder")){
+                    Toast.makeText(context,"你还没有订单哦,去添加订单吧",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                startActivity(new Intent(context, SmartBusOrderActivity.class));
+            }
         });
     }
 
