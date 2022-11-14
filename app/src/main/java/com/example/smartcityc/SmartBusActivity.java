@@ -34,7 +34,7 @@ public class SmartBusActivity extends AppCompatActivity {
     }
 
     private void initEvent() {
-        tvBack.setOnClickListener(v->{
+        tvBack.setOnClickListener(v -> {
             finish();
         });
     }
@@ -54,13 +54,14 @@ public class SmartBusActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 String res = response.body().string();
-               SmartBusBean smartBusBean = new Gson().fromJson(res, SmartBusBean.class);
+                SmartBusBean smartBusBean = new Gson().fromJson(res, SmartBusBean.class);
                 Tool.handler.post(() -> {
-                    SmartBusAdapter.setListView(SmartBusActivity.this,smartBusBean,busListView);
+                    SmartBusAdapter.setListView(SmartBusActivity.this, smartBusBean, busListView);
                 });
             }
         });
     }
+
     private void bindView() {
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvTitle = (TextView) findViewById(R.id.tv_title);

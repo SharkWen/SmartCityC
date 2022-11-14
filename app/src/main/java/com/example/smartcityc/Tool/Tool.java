@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
+import androidx.viewpager.widget.ViewPager;
 
 import java.lang.annotation.Retention;
 import java.util.ArrayList;
@@ -85,5 +86,19 @@ public class Tool {
     }
     public static Map<String,Object> getMap(){
         return new HashMap<>();
+    }
+
+    public static void bannerNext(ViewPager vp, long time, int size){
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(vp.getCurrentItem() == size-1){
+                    vp.setCurrentItem(0);
+                }else{
+                    vp.setCurrentItem(vp.getCurrentItem()+1);
+                }
+                handler.postDelayed(this,time);
+            }
+        },time);
     }
 }

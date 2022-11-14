@@ -13,16 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.smartcityc.Bean.ServiceBean;
+import com.example.smartcityc.FindHourseActivity;
 import com.example.smartcityc.MainActivity;
 import com.example.smartcityc.R;
 import com.example.smartcityc.Tool.Config;
+import com.example.smartcityc.Tool.Tool;
 
 import java.util.List;
 
 public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ViewHolder> {
     Context context;
     List<ServiceBean.RowsDTO> list;
-
+    int[] ints = new int[]{R.drawable.a,R.drawable.b,R.drawable.c,R.drawable.d,R.drawable.e};
     public ServiceAdapter(Context context, List<ServiceBean.RowsDTO> list) {
         this.context = context;
         this.list = list;
@@ -46,8 +48,18 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ViewHold
             holder.textView.setText("全部服务");
             return;
         }
-        Glide.with(context).load(Config.baseUrl+list.get(position).getImgUrl()).into(holder.imageView);
+        if(position<=4){
+            holder.imageView.setImageResource(ints[position]);
+        }else {
+            Glide.with(context).load(Config.baseUrl+list.get(position).getImgUrl()).into(holder.imageView);
+        }
         holder.textView.setText(list.get(position).getServiceName());
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(context,FindHourseActivity.class));
+            }
+        });
     }
 
     @Override

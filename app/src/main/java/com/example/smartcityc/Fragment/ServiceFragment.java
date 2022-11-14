@@ -1,7 +1,10 @@
 package com.example.smartcityc.Fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,8 +19,10 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.smartcityc.ActivityActivity;
@@ -57,7 +62,7 @@ public class ServiceFragment extends Fragment {
     private TextView serveFrgSh;
     private TextView serveFrgCz;
     private TextView serveFrgPm;
-
+    private Dialog dialog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,6 +76,17 @@ public class ServiceFragment extends Fragment {
     }
 
     private void initEvent() {
+        serveFrgSure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String data = serveFrgEd.getText().toString();
+                if(data.equals("")){
+                    Toast.makeText(context,"请输入搜索内容",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                getSearchData(data);
+            }
+        });
         serveFrgSh.setOnClickListener(view1 -> {
             initColor(serveFrgSh);
             getServiceData(serveFrgSh.getText().toString());
@@ -95,11 +111,52 @@ public class ServiceFragment extends Fragment {
         serveFrgPm.setBackgroundColor(Color.rgb(230, 230, 230));
         serveFrgSh.setTextColor(Color.rgb(111, 109, 109));
         serveFrgCz.setTextColor(Color.rgb(111, 109, 109));
-        ;
         serveFrgPm.setTextColor(Color.rgb(111, 109, 109));
-        ;
         tv.setBackgroundColor(Color.WHITE);
         tv.setTextColor(Color.rgb(3, 169, 244));
+    }
+
+    private void getSearchData(String s){
+        Tool.getData("/prod-api/api/service/list?serviceName=" + s, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                ServiceBean serviceBean = new Gson().fromJson(response.body().string(), ServiceBean.class);
+                Tool.handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(serviceBean.getTotal() == 0){
+                            Tool.setDialog(context,"没有相应服务").show();
+                            return;
+                        }
+                        ImageView imageView = new ImageView(context);
+                        Glide.with(context).load(Config.baseUrl + serviceBean.getRows().get(0).getImgUrl())
+                                .into(imageView);
+                        imageView.setImageResource(R.drawable.put);
+                        dialog = new AlertDialog.Builder(context).setView(imageView)
+                                .setTitle(serviceBean.getRows().get(0).getServiceName())
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                })
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                })
+                                .create();
+                        dialog.show();
+                    }
+                });
+            }
+        });
     }
 
     private void getServiceData(String type) {
@@ -115,8 +172,31 @@ public class ServiceFragment extends Fragment {
                 ServiceBean serviceBean = new Gson().fromJson(response.body().string(), ServiceBean.class);
                 for (ServiceBean.RowsDTO n : serviceBean.getRows()) {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("image_service", Config.baseUrl + n.getImgUrl());
-                    map.put("text_service", n.getServiceName());
+                  switch (n.getServiceName()){
+                      case "宠物医院":
+                          map.put("image_service",R.drawable.a);
+                          break;
+                      case "爱心捐赠":
+                          map.put("image_service",R.drawable.c);
+                          break;
+                      case "数据分析":
+                          map.put("image_service",R.drawable.f);
+                          break;
+                      case "青年驿站":
+                          map.put("image_service",R.drawable.b);
+                          break;
+                      case "物流查询":
+                          map.put("image_service",R.drawable.d);
+                          break;
+                      default:
+                          map.put("image_service", Config.baseUrl + n.getImgUrl());
+                          break;
+                    }
+                    if(type.equals("生活服务") && n.getServiceName().equals("活动管理")){
+                        map.put("text_service","活动");
+                    }else {
+                        map.put("text_service", n.getServiceName());
+                    }
                     list.add(map);
                 }
                 if (type.equals("车主服务")) {
@@ -136,7 +216,12 @@ public class ServiceFragment extends Fragment {
                                 if (s.equals("堵车移车")) {
                                     imageView.setImageResource(R.drawable.carmoving);
                                 } else {
-                                    Glide.with(context).load(s).into(imageView);
+                                   if(s.length()>10){
+                                       Glide.with(context).load(s).into(imageView);
+                                   }else {
+                                       imageView.setImageResource(Integer.parseInt(s));
+                                   }
+
                                 }
                                 return true;
                             }

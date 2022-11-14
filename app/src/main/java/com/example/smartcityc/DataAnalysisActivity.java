@@ -56,7 +56,6 @@ public class DataAnalysisActivity extends AppCompatActivity {
 
 
     public void getData() {
-
         Tool.getData("/prod-api/press/press/list", new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {

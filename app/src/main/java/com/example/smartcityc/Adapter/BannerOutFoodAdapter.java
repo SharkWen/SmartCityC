@@ -12,6 +12,7 @@ import com.example.smartcityc.Bean.OutFoodBannerBean;
 import com.example.smartcityc.ShopDetailsActivity;
 import com.example.smartcityc.Tool.Config;
 import com.example.smartcityc.Tool.Tool;
+import com.example.smartcityc.data.DataStore;
 import com.youth.banner.adapter.BannerImageAdapter;
 import com.youth.banner.holder.BannerImageHolder;
 
@@ -45,8 +46,8 @@ public class BannerOutFoodAdapter extends BannerImageAdapter<OutFoodBannerBean.R
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                byte[] data = response.body().bytes();
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            byte[] bytes = response.body().bytes();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
                 Tool.handler.post(()->{
                     bannerImageHolder.imageView.setImageBitmap(bitmap);
                     bannerImageHolder.imageView.setOnClickListener(new View.OnClickListener() {

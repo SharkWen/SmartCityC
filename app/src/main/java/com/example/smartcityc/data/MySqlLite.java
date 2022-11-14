@@ -7,13 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class MySqlLite extends SQLiteOpenHelper {
-    private static SQLiteOpenHelper myInterface;
 
     public MySqlLite(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
-    public synchronized static MySqlLite getMyInterface(Context context) {
+    public  static MySqlLite getMyInterface(Context context) {
      return new MySqlLite(context, "CarMoving", null, 1);
     }
 

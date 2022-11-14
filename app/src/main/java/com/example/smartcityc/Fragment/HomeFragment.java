@@ -38,6 +38,7 @@ import com.example.smartcityc.Bean.CategoryNewsBean;
 import com.example.smartcityc.Bean.NewsBean;
 import com.example.smartcityc.Bean.ServiceBean;
 import com.example.smartcityc.NewListActivity;
+import com.example.smartcityc.NewsDetailsActivity;
 import com.example.smartcityc.R;
 import com.example.smartcityc.Tool.Config;
 import com.example.smartcityc.Tool.Tool;
@@ -116,12 +117,12 @@ public class HomeFragment extends Fragment {
                     for (CategoryNewsBean.DataDTO n : categoryNewsBean.getData()) {
                         tabLayout.addTab(tabLayout.newTab().setText(n.getName()));
                     }
-                    getNewsData(categoryNewsBean.getData().get(0).getId());
+                    getNewsData(categoryNewsBean.getData().get(0).getId()+"");
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
                             int position = tab.getPosition();
-                            getNewsData(categoryNewsBean.getData().get(position).getId());
+                            getNewsData(categoryNewsBean.getData().get(position).getId()+"");
                         }
 
                         @Override
@@ -210,7 +211,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void getNewsData(int id) {
+    private void getNewsData(String id) {
         List<Map<String, Object>> list = new ArrayList<>();
         String[] strings = new String[]{"newsItemTitle", "newsItemContent", "newsItemDate", "newsItemLikeNum", "newsItemImage"};
         int[] ints = new int[]{R.id.news_item_title, R.id.news_item_content, R.id.news_item_date, R.id.news_item_likeNum, R.id.news_item_image};
@@ -250,6 +251,17 @@ public class HomeFragment extends Fragment {
                             }
                         });
                         listView.setAdapter(simpleAdapter);
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                Intent intent = new Intent(context, NewsDetailsActivity.class);
+                                intent.putExtra("id",id);
+                                intent.putExtra("title",newsBean.getRows().get(i).getTitle());
+                                intent.putExtra("image",Config.baseUrl + newsBean.getRows().get(i).getCover());
+                                intent.putExtra("content",Tool.html(newsBean.getRows().get(i).getContent()));
+                                startActivity(intent);
+                            }
+                        });
                     }
                 });
             }
@@ -290,6 +302,17 @@ public class HomeFragment extends Fragment {
                         }
                     });
                     gridView.setAdapter(simpleAdapter);
+                    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            Intent intent = new Intent(context, NewsDetailsActivity.class);
+                            intent.putExtra("id",newsBean.getRows().get(i).getType());
+                            intent.putExtra("title",newsBean.getRows().get(i).getTitle());
+                            intent.putExtra("image",Config.baseUrl + newsBean.getRows().get(i).getCover());
+                            intent.putExtra("content",Tool.html(newsBean.getRows().get(i).getContent()));
+                            startActivity(intent);
+                        }
+                    });
                 });
 
             }

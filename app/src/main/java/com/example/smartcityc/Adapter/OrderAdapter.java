@@ -41,16 +41,17 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
-        Glide.with(context).load(dataStore.getFoodData().get(dataStore.keyList.get(position)).getUrl()).apply(new RequestOptions().transform(new CenterCrop())).into(holder.orderImage);
-        holder.orderNum.setText("X" + dataStore.getFoodData().get(dataStore.keyList.get(position)).getCount() + "");
-        float total = (float) (dataStore.getFoodData().get(dataStore.keyList.get(position)).getCount() * dataStore.getFoodData().get(dataStore.keyList.get(position)).getPrice());
-        holder.orderPrice.setText("￥" + total);
-        holder.orderName.setText(dataStore.getFoodData().get(dataStore.keyList.get(position)).getName());
         if(dataStore.getFoodData().get(dataStore.keyList.get(position)).getCount()==0){
             holder.itemView.setVisibility(View.GONE);
             holder.itemView.setLayoutParams(new LinearLayout.LayoutParams(0,0));
             return;
         }
+        Glide.with(context).load(dataStore.getFoodData().get(dataStore.keyList.get(position)).getUrl()).apply(new RequestOptions().transform(new CenterCrop())).into(holder.orderImage);
+        holder.orderNum.setText("X" + dataStore.getFoodData().get(dataStore.keyList.get(position)).getCount() + "");
+        float total = (float) (dataStore.getFoodData().get(dataStore.keyList.get(position)).getCount() * dataStore.getFoodData().get(dataStore.keyList.get(position)).getPrice());
+        holder.orderPrice.setText("￥" + total);
+        holder.orderName.setText(dataStore.getFoodData().get(dataStore.keyList.get(position)).getName());
+
         OrderSureBean.OrderItemListDTO dto = new OrderSureBean.OrderItemListDTO();
         dto.setProductId(dataStore.keyList.get(position));
         dto.setQuantity(dataStore.getFoodData().get(dataStore.keyList.get(position)).getCount());

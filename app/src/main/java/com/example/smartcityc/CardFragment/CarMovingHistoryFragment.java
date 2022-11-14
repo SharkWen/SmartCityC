@@ -39,8 +39,7 @@ public class CarMovingHistoryFragment extends Fragment {
         return view;
     }
     private void initData() {
-        MySqlLite mySqlLite = MySqlLite.getMyInterface(context);
-        SQLiteDatabase db = mySqlLite.getReadableDatabase();
+        SQLiteDatabase db =  MySqlLite.getMyInterface(context).getReadableDatabase();
         if (db.isOpen()) {
             Cursor cursor = db.rawQuery("select * from carmoving", null);
             while (cursor.moveToNext()) {

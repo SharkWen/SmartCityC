@@ -42,7 +42,7 @@ public class VideoActivity extends AppCompatActivity {
     private Banner videoBanner;
     private ListView videoListView;
     private TextView videoMore;
-
+    VideoBean videoBean;
     boolean isSome = true;
     String search = "";
     String[] strings = new String[]{"videoPic", "videoTitle", "videoContent","videoTime", "videoTimeout"};
@@ -68,12 +68,11 @@ public class VideoActivity extends AppCompatActivity {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if(edSearch.getText().toString().length()<=2 && i == 67){
-                    search = "";
-                    getListView();
+                    getListView("");
                 }
                 if(i==66 && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
                     search = edSearch.getText().toString();
-                    getListView();
+                    getListView(search);
                     return true;
                 }
                 return false;
@@ -84,14 +83,14 @@ public class VideoActivity extends AppCompatActivity {
             public void onClick(View view) {
                 isSome = false;
                 videoMore.setVisibility(View.GONE);
-                getListView();
+                getListView("");
             }
         });
     }
 
     private void initData() {
         getBanner();
-        getListView();
+        getListView("");
     }
 
     private void getBanner() {
@@ -115,7 +114,7 @@ public class VideoActivity extends AppCompatActivity {
         });
     }
 
-    private void getListView() {
+    private void getListView(String search) {
         List<Map<String,Object>> mapList = new ArrayList<>();
         Tool.getData("/prod-api/api/movie/film/list", new Callback() {
             @Override
@@ -125,7 +124,7 @@ public class VideoActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                VideoBean videoBean = new Gson().fromJson(response.body().string(),VideoBean.class);
+                 videoBean = new Gson().fromJson(response.body().string(),VideoBean.class);
                 for(VideoBean.RowsDTO n :videoBean.getRows()){
                     if(n.getName().contains(search)){
                         Map<String,Object> map = new HashMap<>();
@@ -134,6 +133,8 @@ public class VideoActivity extends AppCompatActivity {
                         map.put("videoContent", Tool.html(n.getIntroduction()));
                         map.put("videoTime", n.getPlayDate());
                         map.put("videoTimeout", "时长"+n.getDuration()+"分钟");
+                        map.put("videoScore",n.getScore());
+                        map.put("videoLikeNum",n.getLikeNum());
                         mapList.add(map);
                         if(n.getDuration() == 105 && isSome) break;
                     }
@@ -155,12 +156,22 @@ public class VideoActivity extends AppCompatActivity {
                     videoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            VideoDetails.detailsUrl = Config.baseUrl+ videoBean.getRows().get(i).getCover();
-                            VideoDetails.detailsName = videoBean.getRows().get(i).getName();
-                            VideoDetails.detailsScore = "评分:"+ videoBean.getRows().get(i).getScore()+"";
-                            VideoDetails.detailsLike = "喜欢人数:"+videoBean.getRows().get(i).getLikeNum()+"";
-                            VideoDetails.detailsContent = "简介:"+Tool.html(videoBean.getRows().get(i).getIntroduction());
-                            VideoDetails.stars = videoBean.getRows().get(i).getScore();
+                            if(!search.isEmpty()){
+                                VideoDetails.detailsUrl = mapList.get(i).get("videoPic")+"";
+                                VideoDetails.detailsName = mapList.get(i).get("videoTitle") + "";
+                                VideoDetails.detailsScore = "评分:"+ mapList.get(i).get("videoScore")+"";
+                                VideoDetails.detailsLike = "喜欢人数:"+mapList.get(i).get("videoLikeNum")+"";
+                                VideoDetails.detailsContent = "简介:"+mapList.get(i).get("videoContent") + "";
+                                VideoDetails.stars = Integer.parseInt(mapList.get(i).get("videoScore")+"");
+                            }else {
+                                VideoDetails.detailsUrl = Config.baseUrl+ videoBean.getRows().get(i).getCover();
+                                VideoDetails.detailsName = videoBean.getRows().get(i).getName();
+                                VideoDetails.detailsScore = "评分:"+ videoBean.getRows().get(i).getScore()+"";
+                                VideoDetails.detailsLike = "喜欢人数:"+videoBean.getRows().get(i).getLikeNum()+"";
+                                VideoDetails.detailsContent = "简介:"+Tool.html(videoBean.getRows().get(i).getIntroduction());
+                                VideoDetails.stars = videoBean.getRows().get(i).getScore();
+                            }
+
                             startActivity(new Intent(VideoActivity.this,VideoDetails.class));
                         }
                     });
