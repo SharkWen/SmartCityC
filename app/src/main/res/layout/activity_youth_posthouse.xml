@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".YouthPosthouseActivity">
+    <include layout="@layout/title_bar"/>
+    <ImageView
+        android:layout_margin="10dp"
+        android:background="@drawable/yizhang"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
+    <TextView
+        android:layout_marginHorizontal="10dp"
+        android:textSize="12sp"
+        android:textColor="@color/black"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:text="      隔窗望去海景，夜晚特别好看，市内清新风格的装修，配备舒适的大床和床垫，相信您一定会舒舒服服的睡个好觉！除此之外卧室还有空调、衣柜、挂墙液晶电视、免费百兆wifi、以及独立的卫生间哦24小时热水是妥妥的！如果您想做饭，厨房免费提供给您，快来大展厨艺吧！"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/yz_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/yz_recycler1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

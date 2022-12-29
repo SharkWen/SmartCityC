@@ -3,13 +3,19 @@ package com.example.smartcityc.Tool;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.smartcityc.Bean.ViolationRecordBean;
+
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,11 +24,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class Tool {
     public static OkHttpClient client = new OkHttpClient();
@@ -68,37 +76,58 @@ public class Tool {
         ht = ht.replace("   ", "");
         ht = ht.replace("&nbsp;", "");
         ht = ht.replaceAll("<[^>]+>", "");
-        return "        " +ht;
+        return "        " + ht;
     }
 
     public static AlertDialog setDialog(Context context, String title) {
         return new AlertDialog.Builder(context).setTitle(title).create();
     }
 
-    public static String sp(Context context,String data) {
-        return context.getSharedPreferences("data", Context.MODE_PRIVATE).getString(data,"");
+    public static String sp(Context context, String data) {
+        return context.getSharedPreferences("data", Context.MODE_PRIVATE).getString(data, "");
     }
-    public static SharedPreferences shp(Context context){
-        return context.getSharedPreferences("data",Context.MODE_PRIVATE);
+
+    public static SharedPreferences shp(Context context) {
+        return context.getSharedPreferences("data", Context.MODE_PRIVATE);
     }
-    public static List<Map<String,Object>> getMapList(){
-        return new ArrayList<>();
-    }
-    public static Map<String,Object> getMap(){
+
+
+    public static Map<String, Object> getMap() {
         return new HashMap<>();
     }
 
-    public static void bannerNext(ViewPager vp, long time, int size){
+    public static void bannerNext(ViewPager vp, long time, int size) {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(vp.getCurrentItem() == size-1){
+                if (vp.getCurrentItem() == size - 1) {
                     vp.setCurrentItem(0);
-                }else{
-                    vp.setCurrentItem(vp.getCurrentItem()+1);
+                } else {
+                    vp.setCurrentItem(vp.getCurrentItem() + 1);
                 }
-                handler.postDelayed(this,time);
+                handler.postDelayed(this, time);
             }
-        },time);
+        }, time);
+    }
+
+    public static void loadImage(String url, ImageView targetView) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                byte[] data = response.body().bytes();
+                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                handler.post(() -> {
+                    targetView.setImageBitmap(bitmap);
+                });
+            }
+        });
+
     }
 }

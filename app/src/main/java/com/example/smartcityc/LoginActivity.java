@@ -83,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                         String res = response.body().string();
+                        System.out.println(res);
                         MsgBean msgBean = new Gson().fromJson(res, MsgBean.class);
                         Tool.shp(context).edit().putString("token", msgBean.getToken()).commit();
                         Tool.handler.post(new Runnable() {

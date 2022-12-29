@@ -15,6 +15,41 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+<!--        <activity-->
+<!--            android:name=".ViolationRecord"-->
+<!--            android:exported="false">-->
+<!--            <meta-data-->
+<!--                android:name="android.app.lib_name"-->
+<!--                android:value="" />-->
+<!--        </activity>-->
+        <activity
+            android:name=".ViolationQueryActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".YouthDetails"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".YouthListDetails"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".YouthPosthouseActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".NewsDetailsActivity"
             android:exported="false">
@@ -28,13 +63,11 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".SmartBusOrderActivity"
@@ -84,7 +117,6 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-
         </activity>
         <activity
             android:name=".ParkLotHistory"
@@ -295,7 +327,21 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+
+
         </activity>
+        <activity
+            android:name=".ServerHot.hotline"
+            android:exported="false" />
+        <activity
+            android:name=".ServerHot.HotlineAppeal"
+            android:exported="false" />
+        <activity
+            android:name=".ServerHot.AddAppeal"
+            android:exported="false" />
+        <activity
+            android:name=".ServerHot.AppealInfo"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -33,11 +33,14 @@ import com.example.smartcityc.FindHourseActivity;
 import com.example.smartcityc.MengActivity;
 import com.example.smartcityc.ParkingLotActivity;
 import com.example.smartcityc.R;
+import com.example.smartcityc.ServerHot.hotline;
 import com.example.smartcityc.SmartBusActivity;
 import com.example.smartcityc.TakeOutFoodActivity;
 import com.example.smartcityc.Tool.Config;
 import com.example.smartcityc.Tool.Tool;
 import com.example.smartcityc.VideoActivity;
+import com.example.smartcityc.ViolationQueryActivity;
+import com.example.smartcityc.YouthPosthouseActivity;
 import com.google.gson.Gson;
 
 import org.w3c.dom.ls.LSException;
@@ -195,7 +198,12 @@ public class ServiceFragment extends Fragment {
                     if(type.equals("生活服务") && n.getServiceName().equals("活动管理")){
                         map.put("text_service","活动");
                     }else {
-                        map.put("text_service", n.getServiceName());
+                        if(n.getServiceName().equals("物流查询")){
+                            map.put("text_service", "政府服务热线");
+                        }else {
+                            map.put("text_service", n.getServiceName());
+                        }
+
                     }
                     list.add(map);
                 }
@@ -246,12 +254,21 @@ public class ServiceFragment extends Fragment {
                                     case 3:
                                         context.startActivity(new Intent(context, FindHourseActivity.class));
                                         break;
+                                    case 5:
+                                        context.startActivity(new Intent(context, hotline.class));
+                                        break;
+                                    case 6:
+                                        context.startActivity(new Intent(context, YouthPosthouseActivity.class));
+                                        break;
                                 }
                             }
                             if (type.equals("车主服务")) {
                                 switch (i) {
                                     case 0:
                                         context.startActivity(new Intent(context, ParkingLotActivity.class));
+                                        break;
+                                    case 1:
+                                        context.startActivity(new Intent(context, ViolationQueryActivity.class));
                                         break;
                                     case 2:
                                         context.startActivity(new Intent(context, CarMovingActivity.class));
@@ -271,7 +288,7 @@ public class ServiceFragment extends Fragment {
                                         break;
                                 }
                             }
-                        }
+                       }
                     });
                 });
 
