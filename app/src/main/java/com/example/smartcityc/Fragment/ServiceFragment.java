@@ -242,22 +242,22 @@ public class ServiceFragment extends Fragment {
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             if (type.equals("便民服务")) {
                                 switch (i) {
-                                    case 0:
+                                    case 4:
                                         context.startActivity(new Intent(context, SmartBusActivity.class));
                                         break;
-                                    case 1:
+                                    case 5:
                                         context.startActivity(new Intent(context, MengActivity.class));
                                         break;
-                                    case 2:
+                                    case 6:
                                         startActivity(new Intent(context, TakeOutFoodActivity.class));
                                         break;
-                                    case 3:
+                                    case 7:
                                         context.startActivity(new Intent(context, FindHourseActivity.class));
                                         break;
-                                    case 5:
+                                    case 9:
                                         context.startActivity(new Intent(context, hotline.class));
                                         break;
-                                    case 6:
+                                    case 10:
                                         context.startActivity(new Intent(context, YouthPosthouseActivity.class));
                                         break;
                                 }

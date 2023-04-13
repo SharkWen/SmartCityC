@@ -1,5 +1,6 @@
 package com.example.smartcityc.ServerHot;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -27,9 +28,10 @@ import okhttp3.Response;
 
 public class hotline extends AppCompatActivity {
 
-    private Banner banner;
     OkHttpClient client = new OkHttpClient();
     Handler handler = new Handler();
+    Context context = this;
+    private Banner banner;
     private RecyclerView service;
     private RecyclerView myList;
     private TextView titleBarTitle;
@@ -39,7 +41,7 @@ public class hotline extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hotline);
-        Config.token = Tool.sp(this,"token");
+        Config.token = Tool.sp(this, "token");
         initView();
         initBanners();
         initService();
@@ -47,7 +49,7 @@ public class hotline extends AppCompatActivity {
     }
 
     private void initMyList() {
-        client.newCall(new Request.Builder().url(Config.address+"/prod-api/api/gov-service-hotline/appeal/my-list").header("Authorization", Config.token).build()).enqueue(new Callback() {
+        client.newCall(new Request.Builder().url(Config.address + "/prod-api/api/gov-service-hotline/appeal/my-list").header("Authorization", Config.token).build()).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
             }
@@ -56,7 +58,11 @@ public class hotline extends AppCompatActivity {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 String responseText = response.body().string();
                 HotlineMyListBean data = new Gson().fromJson(responseText, HotlineMyListBean.class);
-                handler.post(()->{
+                handler.post(() -> {
+                    if (data.getCode() != 200) {
+                        Tool.setDialog(context, data.getMsg()).show();
+                        return;
+                    }
                     HotlineMyListAdapter adapter = new HotlineMyListAdapter(getApplicationContext(), data.getRows());
                     myList.setAdapter(adapter);
                     myList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -66,7 +72,7 @@ public class hotline extends AppCompatActivity {
     }
 
     private void initService() {
-        client.newCall(new Request.Builder().url(Config.address+"/prod-api/api/gov-service-hotline/appeal-category/list").header("Authorization", Config.token).build()).enqueue(new Callback() {
+        client.newCall(new Request.Builder().url(Config.address + "/prod-api/api/gov-service-hotline/appeal-category/list").header("Authorization", Config.token).build()).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
 
@@ -78,17 +84,21 @@ public class hotline extends AppCompatActivity {
                 System.out.println(responseText);
                 System.out.println(responseText);
                 HotlineServiceBean data = new Gson().fromJson(responseText, HotlineServiceBean.class);
-                handler.post(()->{
-                    HotlineServiceAdapter adapter = new HotlineServiceAdapter(getApplicationContext(),data.getRows());
+                handler.post(() -> {
+                    if (data.getCode() != 200) {
+                        Tool.setDialog(context, data.getMsg()).show();
+                        return;
+                    }
+                    HotlineServiceAdapter adapter = new HotlineServiceAdapter(getApplicationContext(), data.getRows());
                     service.setAdapter(adapter);
-                    service.setLayoutManager(new GridLayoutManager(getApplicationContext(),8));
+                    service.setLayoutManager(new GridLayoutManager(getApplicationContext(), 8));
                 });
             }
         });
     }
 
     private void initBanners() {
-        client.newCall(new Request.Builder().url(Config.address+"/prod-api/api/gov-service-hotline/ad-banner/list").header("Authorization", Config.token).build()).enqueue(new Callback() {
+        client.newCall(new Request.Builder().url(Config.address + "/prod-api/api/gov-service-hotline/ad-banner/list").header("Authorization", Config.token).build()).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
             }
@@ -97,8 +107,12 @@ public class hotline extends AppCompatActivity {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 String responseText = response.body().string();
                 HotlineBannerBean bean = new Gson().fromJson(responseText, HotlineBannerBean.class);
-                handler.post(()->{
-                    HotlineBannerAdapter adapter = new HotlineBannerAdapter(bean.getData(),getApplicationContext());
+                handler.post(() -> {
+                    if (bean.getCode() != 200) {
+                        Tool.setDialog(context, bean.getMsg()).show();
+                        return;
+                    }
+                    HotlineBannerAdapter adapter = new HotlineBannerAdapter(bean.getData(), getApplicationContext());
                     banner.setAdapter(adapter);
                 });
             }

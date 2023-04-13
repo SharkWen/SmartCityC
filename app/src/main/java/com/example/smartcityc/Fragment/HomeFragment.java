@@ -1,15 +1,8 @@
 package com.example.smartcityc.Fragment;
 
 import android.content.Context;
-
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,15 +10,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -47,11 +41,8 @@ import com.google.gson.Gson;
 import com.youth.banner.Banner;
 import com.youth.banner.indicator.CircleIndicator;
 
-import org.w3c.dom.ls.LSException;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -332,7 +323,6 @@ public class HomeFragment extends Fragment {
                 Tool.handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Collections.sort(serviceBean.getRows(), (o1, o2) -> o2.getSort() - o1.getSort());
                         ServiceAdapter serviceAdapter = new ServiceAdapter(context, serviceBean.getRows());
                         recyclerView.setLayoutManager(new GridLayoutManager(context, 5) {
                             @Override

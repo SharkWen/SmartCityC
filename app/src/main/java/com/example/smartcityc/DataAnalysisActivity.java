@@ -1,18 +1,15 @@
 package com.example.smartcityc;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcityc.Bean.NewsBean;
 import com.example.smartcityc.Tool.Tool;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -23,16 +20,17 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 public class DataAnalysisActivity extends AppCompatActivity {
-    ArrayList<BarEntry>  values = new ArrayList<>();
-    BarDataSet set1;
+
+    List<BarEntry> barEntries = new ArrayList<>();
+    List<String> strings = new ArrayList<>();
     private BarChart chart;
-    XAxis xAxis;
     private TextView tvBack;
     private TextView tvTitle;
 
@@ -44,7 +42,7 @@ public class DataAnalysisActivity extends AppCompatActivity {
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvTitle = (TextView) findViewById(R.id.tv_title);
         tvTitle.setText("新闻数据分析");
-        xAxis = chart.getXAxis();
+
         getData();
         tvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,26 +63,26 @@ public class DataAnalysisActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 NewsBean newsBean = new Gson().fromJson(response.body().string(), NewsBean.class);
-                String[] strings = new String[5];
-                for (int i = 0; i < 5; i++) {
-                    strings[i] = newsBean.getRows().get(i).getTitle();
-                    float y = newsBean.getRows().get(i).getLikeNum();
-                    values.add(new BarEntry(i, y));
-                }
-                xAxis.setValueFormatter(new IndexAxisValueFormatter(strings));
-                Tool.handler.post(() -> {
-                    set1 = new BarDataSet(values, "新闻分析");
-                    set1.setColors(ColorTemplate.VORDIPLOM_COLORS);
-                    ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-                    dataSets.add(set1);
-                    chart.setData(new BarData(dataSets));
-                    //绘制图表
-                    chart.invalidate();
-                    chart.getData().setValueTextSize(15);
-                    chart.setPinchZoom(true);
-                    xAxis.setGranularityEnabled(true);
-                    xAxis.setPosition(XAxis.XAxisPosition.TOP_INSIDE);
-                    chart.animateXY(2000, 3000);
+                Tool.handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int i = 0;
+                        for (NewsBean.RowsDTO rowsDTO : newsBean.getRows()) {
+                            strings.add(rowsDTO.getTitle().substring(0,4)+"...");
+                            float y = rowsDTO.getLikeNum();
+                            barEntries.add(new BarEntry(i,y));
+                            i++;
+                        }
+                        chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(strings));
+                        chart.getXAxis().setGranularityEnabled(true);
+                        BarDataSet dataSet = new BarDataSet(barEntries,"新闻分析");
+                        dataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
+                        List<IBarDataSet> iBarDataSets = new ArrayList<>();
+                        iBarDataSets.add(dataSet);
+                        chart.animateXY(2000,2000);
+                        chart.setData(new BarData(iBarDataSets));
+                        chart.invalidate();
+                    }
                 });
             }
         });

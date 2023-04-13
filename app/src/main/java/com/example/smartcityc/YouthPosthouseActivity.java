@@ -59,6 +59,10 @@ public class YouthPosthouseActivity extends AppCompatActivity {
                 Tool.handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        if(youthBean.getCode() != 200){
+                            Tool.setDialog(context,youthBean.getMsg()).show();
+                            return;
+                        }
                         YouthAdapter youthAdapter = new YouthAdapter(context,youthBean.getDataList());
                         yzRecycler.setLayoutManager(new GridLayoutManager(context,3));
                         yzRecycler.setAdapter(youthAdapter);
@@ -78,6 +82,10 @@ public class YouthPosthouseActivity extends AppCompatActivity {
             Tool.handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    if(youthListBean.getCode() != 200){
+                        Tool.setDialog(context,youthListBean.getMsg()).show();
+                        return;
+                    }
                     YouthListAdapter youthListAdapter = new YouthListAdapter(context,youthListBean.getRows());
                     yzRecycler1.setLayoutManager(new LinearLayoutManager(context));
                     yzRecycler1.setAdapter(youthListAdapter);

@@ -15,7 +15,12 @@ import com.bumptech.glide.Glide;
 import com.example.smartcityc.Bean.ServiceBean;
 import com.example.smartcityc.FindHourseActivity;
 import com.example.smartcityc.MainActivity;
+import com.example.smartcityc.MengActivity;
+import com.example.smartcityc.ParkingLotActivity;
 import com.example.smartcityc.R;
+import com.example.smartcityc.ServerHot.HotlineAppeal;
+import com.example.smartcityc.ServerHot.hotline;
+import com.example.smartcityc.SmartBusActivity;
 import com.example.smartcityc.Tool.Config;
 import com.example.smartcityc.Tool.Tool;
 
@@ -24,7 +29,7 @@ import java.util.List;
 public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ViewHolder> {
     Context context;
     List<ServiceBean.RowsDTO> list;
-    int[] ints = new int[]{R.drawable.a,R.drawable.b,R.drawable.c,R.drawable.d,R.drawable.e};
+
     public ServiceAdapter(Context context, List<ServiceBean.RowsDTO> list) {
         this.context = context;
         this.list = list;
@@ -39,25 +44,37 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if(position==9){
+        if (position == 9) {
             holder.imageView.setImageResource(R.drawable.gengduo);
             holder.imageView.setOnClickListener(view -> {
                 MainActivity.back = "service";
-                context.startActivity(new Intent(context,MainActivity.class));
+                context.startActivity(new Intent(context, MainActivity.class));
             });
             holder.textView.setText("全部服务");
             return;
         }
-        if(position<=4){
-            holder.imageView.setImageResource(ints[position]);
-        }else {
-            Glide.with(context).load(Config.baseUrl+list.get(position).getImgUrl()).into(holder.imageView);
-        }
+
+        Glide.with(context).load(Config.baseUrl + list.get(position).getImgUrl()).into(holder.imageView);
+
         holder.textView.setText(list.get(position).getServiceName());
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context,FindHourseActivity.class));
+                switch (list.get(position).getServiceName()){
+                    case "政府服务热线":
+                        context.startActivity(new Intent(context, hotline.class));
+                        break;
+                    case "停哪儿":
+                        context.startActivity(new Intent(context, ParkingLotActivity.class));
+                        break;
+                    case "智慧巴士":
+                        context.startActivity(new Intent(context, SmartBusActivity.class));
+                        break;
+                    case "门诊预约":
+                        context.startActivity(new Intent(context, MengActivity.class));
+                        break;
+                }
+
             }
         });
     }

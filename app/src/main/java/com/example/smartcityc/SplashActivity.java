@@ -61,7 +61,6 @@ public class SplashActivity extends AppCompatActivity {
         dots.add(dot4);
         SplashAdapter splashAdapter = new SplashAdapter(views);
         viewpager.setAdapter(splashAdapter);
-        Tool.bannerNext(viewpager,1000,views.size());
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

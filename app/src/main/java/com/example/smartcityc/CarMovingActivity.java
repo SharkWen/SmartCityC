@@ -35,6 +35,7 @@ public class CarMovingActivity extends AppCompatActivity {
 
     private void initEvent() {
         tvBack.setOnClickListener(v -> {
+            MainActivity.back = "service";
             startActivity(new Intent(this, MainActivity.class));
         });
         carMovingAuto.setOnClickListener(v -> {

@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/86185/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/simple_list_item_2.xml" value="0.264" />
+        <entry key="..\:/Users/86185/Desktop/SmartCityC/SmartCityC/app/src/main/res/drawable/btn_public.xml" value="0.2035" />
+        <entry key="..\:/Users/86185/Desktop/SmartCityC/SmartCityC/app/src/main/res/layout/fragment_home.xml" value="0.2390625" />
+        <entry key="..\:/Users/86185/Desktop/SmartCityC/app/src/main/res/drawable/splash_dot.xml" value="0.2035" />
+        <entry key="..\:/Users/86185/Desktop/SmartCityC/app/src/main/res/layout/activity_activity.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/86185/Desktop/SmartCityC/app/src/main/res/layout/activity_address.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/86185/Desktop/SmartCityC/app/src/main/res/layout/activity_splash.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/86185/Desktop/SmartCityC/app/src/main/res/layout/fragment_home.xml" value="0.253125" />
+        <entry key="..\:/Users/86185/Desktop/SmartCityC/app/src/main/res/layout/fragment_news.xml" value="0.25364583333333335" />
+      </map>
+    </option>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
